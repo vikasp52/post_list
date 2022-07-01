@@ -8,6 +8,9 @@ class PostList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ScrollController _scrollController = ScrollController();
+    final cubit = context.read<PostCubit>();
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -51,12 +54,22 @@ class PostList extends StatelessWidget {
 
           if (postState is PostLoaded) {
             return ListView.builder(
+              controller: _scrollController
+                ..addListener(() {
+                  if (_scrollController.offset ==
+                      _scrollController.position.maxScrollExtent) {
+                    cubit.getPostList(
+                      page: cubit.currentPage++,
+                    );
+                  }
+                }),
               itemCount: postState.postList.length,
               itemBuilder: (context, index) {
                 Post post = postState.postList[index];
                 return Card(
                   child: ListTile(
                     title: Text(post.title ?? ''),
+                    subtitle: Text(post.id.toString()),
                   ),
                 );
               },

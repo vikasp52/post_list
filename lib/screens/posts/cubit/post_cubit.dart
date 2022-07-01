@@ -11,10 +11,14 @@ class PostCubit extends Cubit<PostState> {
   PostCubit(
     this.postRepossitory,
   ) : super(PostLoading()) {
-    getPostList();
+    getPostList(
+      page: currentPage,
+    );
   }
 
   final PostRepossitory postRepossitory;
+  List<Post> posts = [];
+  int currentPage = 1;
 
   Future<bool> checkInternet() async {
     try {
@@ -28,25 +32,34 @@ class PostCubit extends Cubit<PostState> {
     return false;
   }
 
-  Future<void> getPostList() async {
+  Future<void> getPostList({
+    required int page,
+  }) async {
+    print('getPostList called');
+    print('page: $page');
     final isConnected = await checkInternet();
     if (!isConnected) {
-      return emit(PostError(
-        errorMessage: 'No internet!\n Please try again.',
-      ));
+      return emit(
+        PostError(
+          errorMessage: 'No internet!\n Please try again.',
+        ),
+      );
     }
 
     emit(PostLoading());
 
-    List<Post> postList = await postRepossitory.getPost();
+    List<Post> postList = await postRepossitory.getPost(
+      page: page,
+    );
 
     if (postList.isEmpty) {
-      return emit(PostNoData('We are not able to find this location'));
+      return emit(PostNoData('We don\'t have any post now.'));
     }
     try {
+      posts.addAll(postList);
       emit(
         PostLoaded(
-          postList: postList,
+          postList: posts,
         ),
       );
     } catch (e) {
