@@ -12,8 +12,8 @@ class PostCubit extends Cubit<PostState> {
     this.postRepossitory,
   ) : super(PostLoading()) {
     getPostList(
-      page: currentPage,
-    );
+        //page: currentPage,
+        'PostCubit');
   }
 
   final PostRepossitory postRepossitory;
@@ -32,11 +32,10 @@ class PostCubit extends Cubit<PostState> {
     return false;
   }
 
-  Future<void> getPostList({
-    required int page,
-  }) async {
-    print('getPostList called');
-    print('page: $page');
+  Future<void> getPostList(String calledfrom) async {
+    print('getPostList called: $calledfrom');
+    print('page: $currentPage');
+
     final isConnected = await checkInternet();
     if (!isConnected) {
       return emit(
@@ -49,7 +48,7 @@ class PostCubit extends Cubit<PostState> {
     emit(PostLoading());
 
     List<Post> postList = await postRepossitory.getPost(
-      page: page,
+      page: currentPage++,
     );
 
     if (postList.isEmpty) {
