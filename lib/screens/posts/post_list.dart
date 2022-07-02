@@ -1,6 +1,3 @@
-import 'package:benshi/repository/model/comment.dart';
-import 'package:benshi/repository/model/posts.dart';
-import 'package:benshi/repository/model/user.dart';
 import 'package:benshi/screens/post_details/post_details.dart';
 import 'package:benshi/screens/posts/cubit/post_cubit.dart';
 import 'package:benshi/screens/posts/widgets/widgets.dart';
@@ -48,13 +45,20 @@ class _PostListState extends State<PostList> {
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.white,
-        title: const Text(
-          'benshi.ai',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 30,
-          ),
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/logo.png',
+              width: 50,
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Image.asset(
+              'assets/banshi_logo.png',
+              width: 120,
+            ),
+          ],
         ),
         actions: [
           IconButton(

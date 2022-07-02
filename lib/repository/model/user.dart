@@ -4,8 +4,19 @@ class User {
   String? username;
   String? email;
   Address? address;
+  String? phone;
+  String? website;
+  Company? company;
 
-  User({this.id, this.name, this.username, this.email, this.address});
+  User(
+      {this.id,
+      this.name,
+      this.username,
+      this.email,
+      this.address,
+      this.phone,
+      this.website,
+      this.company});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -14,6 +25,10 @@ class User {
     email = json['email'];
     address =
         json['address'] != null ? Address.fromJson(json['address']) : null;
+    phone = json['phone'];
+    website = json['website'];
+    company =
+        json['company'] != null ? Company.fromJson(json['company']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -25,6 +40,11 @@ class User {
     if (address != null) {
       data['address'] = address!.toJson();
     }
+    data['phone'] = phone;
+    data['website'] = website;
+    if (company != null) {
+      data['company'] = company!.toJson();
+    }
     return data;
   }
 }
@@ -34,16 +54,22 @@ class Address {
   String? suite;
   String? city;
   String? zipcode;
-  Geo? geo;
+  late Geo geo;
 
-  Address({this.street, this.suite, this.city, this.zipcode, this.geo});
+  Address({
+    this.street,
+    this.suite,
+    this.city,
+    this.zipcode,
+    required this.geo,
+  });
 
   Address.fromJson(Map<String, dynamic> json) {
     street = json['street'];
     suite = json['suite'];
     city = json['city'];
     zipcode = json['zipcode'];
-    geo = json['geo'] != null ? Geo.fromJson(json['geo']) : null;
+    geo = Geo.fromJson(json['geo']);
   }
 
   Map<String, dynamic> toJson() {
@@ -52,9 +78,7 @@ class Address {
     data['suite'] = suite;
     data['city'] = city;
     data['zipcode'] = zipcode;
-    if (geo != null) {
-      data['geo'] = geo!.toJson();
-    }
+    data['geo'] = geo.toJson();
     return data;
   }
 }
@@ -71,9 +95,31 @@ class Geo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['lat'] = lat;
     data['lng'] = lng;
+    return data;
+  }
+}
+
+class Company {
+  String? name;
+  String? catchPhrase;
+  String? bs;
+
+  Company({this.name, this.catchPhrase, this.bs});
+
+  Company.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    catchPhrase = json['catchPhrase'];
+    bs = json['bs'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['name'] = name;
+    data['catchPhrase'] = catchPhrase;
+    data['bs'] = bs;
     return data;
   }
 }
