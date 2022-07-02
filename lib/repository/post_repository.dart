@@ -36,8 +36,20 @@ class PostRepossitory {
     }
   }
 
-  Future<User?> getUserData(String userId) async {
-    String url = Constants.baseUrl + Constants.user + userId;
+  Future<List<User>> getUserData1(int userId) async {
+    String url = Constants.baseUrl + Constants.user + userId.toString();
+
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      return List<User>.from(
+          json.decode(response.body).map((x) => User.fromJson(x)));
+    } else {
+      throw Exception('Failed to load users');
+    }
+  }
+
+  Future<User> getUserData(int userId) async {
+    String url = Constants.baseUrl + Constants.user + userId.toString();
 
     final response = await http.get(Uri.parse(url));
 
@@ -55,12 +67,12 @@ class PostRepossitory {
       if (kDebugMode) {
         print('Exception $e');
       }
-      return null;
+      throw Exception('Failed to user load data');
     }
   }
 
-  Future<List<Comment>> getComments(String postId) async {
-    String url = Constants.baseUrl + Constants.comments + postId;
+  Future<List<Comment>> getComments(int postId) async {
+    String url = Constants.baseUrl + Constants.comments + postId.toString();
 
     final response = await http.get(Uri.parse(url));
 
@@ -86,14 +98,12 @@ class PostRepossitory {
     }
   }
 
-  String? getImage({
+  String getImage({
     required String postTitle,
-    required double width,
-    required double height,
+    required int width,
+    required int height,
   }) {
-    String url = Constants.baseUrl +
-        Constants.imageUrl +
-        'sha256$postTitle/$width/$height';
+    String url = Constants.imageUrl + 'sha256$postTitle/$width/$height';
 
     try {
       return url;
@@ -101,7 +111,7 @@ class PostRepossitory {
       if (kDebugMode) {
         print('Exception $e');
       }
-      return null;
+      throw Exception('Not able to load image');
     }
   }
 }

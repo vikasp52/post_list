@@ -9,10 +9,10 @@ class PostLoading extends PostState {}
 
 class PostLoaded extends PostState {
   PostLoaded({
-    required this.postList,
+    required this.posts,
   });
 
-  final List<Post> postList;
+  final PostData posts;
 }
 
 class PostNoData extends PostState {
