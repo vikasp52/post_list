@@ -1,6 +1,7 @@
 import 'package:benshi/screens/post_details/post_details.dart';
 import 'package:benshi/screens/posts/cubit/post_cubit.dart';
 import 'package:benshi/screens/posts/widgets/widgets.dart';
+import 'package:benshi/screens/settings/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -62,7 +63,12 @@ class _PostListState extends State<PostList> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                fullscreenDialog: true,
+                builder: (_) => const Setting(),
+              ),
+            ),
             icon: const Icon(
               Icons.settings,
               color: Colors.black,
@@ -96,12 +102,8 @@ class _PostListState extends State<PostList> {
               itemCount: postData.length,
               itemBuilder: (_, index) {
                 PostData post = postData[index];
-                // User user = postData.user[index];
-                // List<Comment> comments = postData.comment[index];
-                // String image = postData.image[index];
 
                 if (index + 1 == postData.length) {
-                  print('Show progressbar');
                   return const Center(
                     child: Padding(
                       padding: EdgeInsets.only(
