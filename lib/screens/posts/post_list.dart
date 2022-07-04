@@ -1,8 +1,10 @@
+import 'package:benshi/repository/model/model.dart';
 import 'package:benshi/screens/post_details/post_details.dart';
 import 'package:benshi/screens/posts/cubit/post_cubit.dart';
 import 'package:benshi/screens/posts/widgets/widgets.dart';
 import 'package:benshi/screens/settings/cubit/settings_cubit.dart';
 import 'package:benshi/screens/settings/settings.dart';
+import 'package:benshi/utils/save_events.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -123,20 +125,37 @@ class _PostListState extends State<PostList> {
                   );
                 }
                 return CustomListItems(
-                  title: post.post.title,
-                  desc: post.post.body,
-                  name: post.user.name ?? '',
-                  commentCount: post.comment.length.toString(),
-                  imagePath: post.image,
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      fullscreenDialog: true,
-                      builder: (_) => PostDetails(
-                        postData: post,
-                      ),
-                    ),
-                  ),
-                );
+                    title: post.post.title,
+                    desc: post.post.body,
+                    name: post.user.name ?? '',
+                    commentCount: post.comment.length.toString(),
+                    imagePath: post.image,
+                    onTap: () {
+                      final meta = Meta(
+                          timestamp:
+                              DateTime.now().microsecondsSinceEpoch.toString(),
+                          location: Location(
+                            lat: 'd43434',
+                            long: '3434',
+                          ));
+
+                      final event = EventData(
+                        appId: post.user.email,
+                        action: EventActions.open.name,
+                        resourceId: post.post.id,
+                        userId: post.user.id,
+                        meta: meta,
+                      );
+                      Events().addEvents(eventData: event);
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          fullscreenDialog: true,
+                          builder: (_) => PostDetails(
+                            postData: post,
+                          ),
+                        ),
+                      );
+                    });
               },
             );
           }
