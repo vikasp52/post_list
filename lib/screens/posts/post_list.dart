@@ -1,7 +1,8 @@
 import 'package:benshi/screens/post_details/post_details.dart';
 import 'package:benshi/screens/posts/cubit/post_cubit.dart';
 import 'package:benshi/screens/posts/widgets/widgets.dart';
-import 'package:benshi/screens/settings/setting.dart';
+import 'package:benshi/screens/settings/cubit/settings_cubit.dart';
+import 'package:benshi/screens/settings/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -66,7 +67,10 @@ class _PostListState extends State<PostList> {
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute(
                 fullscreenDialog: true,
-                builder: (_) => const Setting(),
+                builder: (_) => BlocProvider(
+                  create: (context) => SettingsCubit(),
+                  child: Setting(),
+                ),
               ),
             ),
             icon: const Icon(

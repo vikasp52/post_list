@@ -39,10 +39,10 @@ class CustomListItems extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                Text(
-                  desc,
-                ),
-                Text('${desc.substring(0, 100)}...'),
+                // Text(
+                //   desc,
+                // ),
+                Text(desc.length > 100 ? '${desc.substring(0, 100)}...' : desc),
                 const SizedBox(
                   height: 10,
                 ),
