@@ -15,12 +15,13 @@ class PostList extends StatefulWidget {
   State<PostList> createState() => _PostListState();
 }
 
-class _PostListState extends State<PostList> {
+class _PostListState extends State<PostList> with WidgetsBindingObserver {
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance?.addObserver(this);
     context.read<PostCubit>().getPostList();
     getNextPosts();
   }
@@ -37,7 +38,24 @@ class _PostListState extends State<PostList> {
   @override
   void dispose() {
     _scrollController.dispose();
+    WidgetsBinding.instance?.removeObserver(this);
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        //Execute the code here when user come back the app.
+        //In my case, I needed to show if user active or not,
+        break;
+      case AppLifecycleState.paused:
+        //Execute the code the when user leave the app
+        Events().sendEmail();
+        break;
+      default:
+        break;
+    }
   }
 
   @override
@@ -131,22 +149,7 @@ class _PostListState extends State<PostList> {
                     commentCount: post.comment.length.toString(),
                     imagePath: post.image,
                     onTap: () {
-                      final meta = Meta(
-                          timestamp:
-                              DateTime.now().microsecondsSinceEpoch.toString(),
-                          location: Location(
-                            lat: 'd43434',
-                            long: '3434',
-                          ));
-
-                      final event = EventData(
-                        appId: post.user.email,
-                        action: EventActions.open.name,
-                        resourceId: post.post.id,
-                        userId: post.user.id,
-                        meta: meta,
-                      );
-                      Events().addEvents(eventData: event);
+                      Events().addEvents(post: post);
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           fullscreenDialog: true,
@@ -166,52 +169,3 @@ class _PostListState extends State<PostList> {
     );
   }
 }
-
-
-// BlocBuilder<PostCubit, PostState>(
-//         builder: (context, postState) {
-//           if (postState is PostLoading) {
-//             return const Center(
-//               child: CircularProgressIndicator(
-//                 valueColor: AlwaysStoppedAnimation<Color>(
-//                   Colors.black,
-//                 ),
-//               ),
-//             );
-//           }
-
-//           if (postState is PostError) {
-//             return Center(
-//               child: Text(postState.errorMessage),
-//             );
-//           }
-
-//           if (postState is PostLoaded) {
-//             return ListView.builder(
-//               controller: _scrollController,
-//               itemCount: postState.posts.posts.length,
-//               itemBuilder: (context, index) {
-//                 Post post = postState.posts.posts[index];
-//                 User user = postState.posts.users[index];
-//                 List<Comment> comments = postState.posts.comments[index];
-//                 String images = postState.posts.images[index];
-
-//                 return Card(
-//                   child: ListTile(
-//                     title: Text(post.title),
-//                     subtitle: Column(
-//                       children: [
-//                         Text('Post id-' + post.id.toString()),
-//                         Text('Name-' + user.name.toString()),
-//                         Text('Comments-' + comments.length.toString()),
-//                       ],
-//                     ),
-//                     trailing: Image.network(images),
-//                   ),
-//                 );
-//               },
-//             );
-//           }
-//           return const SizedBox();
-//         },
-//       ),
