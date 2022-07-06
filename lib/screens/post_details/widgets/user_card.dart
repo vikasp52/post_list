@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class UserCard extends StatelessWidget {
   final String lable;
   final IconData icon;
+  final GestureTapCallback? onTap;
   const UserCard({
     Key? key,
     required this.lable,
     required this.icon,
+    this.onTap,
   }) : super(key: key);
 
   @override
@@ -23,10 +25,13 @@ class UserCard extends StatelessWidget {
           const SizedBox(
             width: 10,
           ),
-          Text(
-            lable,
-            style: const TextStyle(
-              fontSize: 16,
+          InkWell(
+            onTap: onTap,
+            child: Text(
+              lable,
+              style: const TextStyle(
+                fontSize: 16,
+              ),
             ),
           ),
         ],

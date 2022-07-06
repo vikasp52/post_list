@@ -1,6 +1,7 @@
 import 'package:benshi/repository/model/user.dart';
 import 'package:benshi/screens/post_details/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AuthodData extends StatelessWidget {
   final User user;
@@ -39,14 +40,37 @@ class AuthodData extends StatelessWidget {
             UserCard(
               lable: user.email!,
               icon: Icons.email,
+              onTap: () async {
+                final Uri _email = Uri(
+                  scheme: 'mailto',
+                  path: user.email,
+                  query: 'Mail to benshi.ai',
+                );
+
+                if (await launchUrl(_email)) {
+                  throw 'Could not launch $_email';
+                }
+              },
             ),
             UserCard(
               lable: user.website!,
               icon: Icons.web,
+              onTap: () async {
+                final Uri _website = Uri.parse(user.website!);
+                if (await canLaunchUrl(_website)) {
+                  throw 'Could not launch $_website';
+                }
+              },
             ),
             UserCard(
               lable: user.phone!,
               icon: Icons.phone,
+              onTap: () async {
+                final _phone = 'tel:${user.phone}';
+                if (await launchUrl(Uri.parse(_phone))) {
+                  throw 'Could not launch $_phone';
+                }
+              },
             ),
             const SizedBox(
               height: 10,
